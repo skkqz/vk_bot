@@ -1,7 +1,5 @@
 from vk_api.keyboard import VkKeyboard
-from database.database_queries import get_list_name_category, get_list_name_products
-
-fake_catalog = ['Хлеб', 'Пирожные', 'Кексы', 'Эклеры', 'Печенье', 'Торты', 'Круассаны', ]
+from database.database_queries import get_list_name_category
 
 
 def main_menu():

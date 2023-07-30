@@ -19,7 +19,7 @@ image_product = {
 def create_fake_database():
     """Функция для создания тестовой базы данных"""
 
-    path_dir_image = os.path.abspath(os.path.join('../image'))
+    path_dir_image = os.path.abspath(os.path.join('image'))
 
     for num, category in enumerate(fake_catalog):
 

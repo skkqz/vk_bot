@@ -1,4 +1,3 @@
-import functools
 from database.models import User, Category, Product
 from database.base_model import db
 
@@ -11,7 +10,6 @@ def get_user_first_name(user_id, v):
     return user_first_name[0]['first_name']
 
 
-@functools.lru_cache(maxsize=None)
 def get_list_name_category():
     """Получения списка имён категорий"""
 
@@ -21,7 +19,6 @@ def get_list_name_category():
     return list_categories_name
 
 
-@functools.lru_cache(maxsize=None)
 def get_list_name_products(category_name):
     """Получения списка имён продукта"""
 
@@ -31,7 +28,6 @@ def get_list_name_products(category_name):
     return product_names
 
 
-@functools.lru_cache(maxsize=None)
 def get_product(product_name):
     """Функция для получения продукта """
 

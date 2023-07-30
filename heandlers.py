@@ -1,6 +1,6 @@
 from keyboards.keyboard import button_main_menu, button_category_menu, \
-    list_categories, creating_a_list_button_menu, get_list_name_products
-from database.database_queries import get_user, update_position_user, get_product
+    list_categories, creating_a_list_button_menu
+from database.database_queries import get_user, update_position_user, get_product, get_list_name_products
 
 user_category_dict = {}
 
