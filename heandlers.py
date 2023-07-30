@@ -1,15 +1,8 @@
-from keyboards.keyboard import button_main_menu, button_category_menu
+from keyboards.keyboard import button_main_menu, button_category_menu, \
+    list_categories, creating_a_list_button_menu, get_list_name_products
+from database.database_queries import get_user, update_position_user, get_product
 
-
-fake_db_user = {}
-
-
-def get_user_first_name(user_id, v):
-    """Функция возвращает имя пользователя по его id"""
-
-    t = v.users.get(user_ids=user_id)
-
-    return t[0]['first_name']
+user_category_dict = {}
 
 
 def send_message(id_user, id_keyboard, message_text, v):
@@ -25,28 +18,57 @@ def send_message(id_user, id_keyboard, message_text, v):
         print(f'Ошибка отправки сообщения у id: {id_user} ({ex})')
 
 
-def logic(user_id, text, v):
+def logic(user_id, text, v, u):
+    """Логика ответа бота на сообщения от пользователя"""
 
-    if not fake_db_user.get(user_id):
-        fake_db_user[user_id] = 1
+    user = get_user(user_id, v)
 
-    user_name = get_user_first_name(user_id, v)
+    if user_id not in user_category_dict:
+        user_category_dict[user_id] = []
 
-    if fake_db_user[user_id] == 1:
-        fake_db_user[user_id] = 2
-        send_message(user_id, button_main_menu, 'Главное меню', v)
+    if user.position == 1:
 
-    elif fake_db_user[user_id] == 2:
-        fake_db_user[user_id] = 3
-        send_message(user_id, button_category_menu, 'Категории', v)
+        send_message(user_id, button_main_menu, 'У Мамы и Папы', v)
+        if text == 'наша выпечка':
+            update_position_user(user_id, 2)
+            send_message(user_id, button_category_menu, 'Наша выпечка', v)
 
-    elif text == 'назад':
-        fake_db_user[user_id] = 1
-        send_message(user_id, button_main_menu, 'Вы вернулись назад', v)
+        elif text == 'адреса наших кондитерских':
 
-    else:
+            v.messages.send(user_id=user_id,
+                            message='г. Москва, ул. Охотничий ряд, д.20, центральный вход', random_id=0)
 
-        v.messages.send(
-            user_id=user_id,
-            random_id=0,
-            message=f'{user_name}, извините я не знаю такой команды')
+        elif text == 'о нас':
+
+            v.messages.send(user_id=user_id,
+                            message='Семейная кондитерская.', random_id=0)
+
+    elif user.position == 2:
+
+        send_message(user_id, button_category_menu, 'Наша выпечка', v)
+        if text.title() in list_categories:
+            update_position_user(user_id, 3)
+            user_category_dict[user_id] = get_list_name_products(text.title())
+            send_message(user_id, creating_a_list_button_menu(user_category_dict[user_id]), text.title(), v)
+        elif text == 'назад':
+            update_position_user(user_id, 0)
+            send_message(user_id, button_main_menu, 'Главное меню', v)
+
+    elif user.position == 3:
+        if text.title() in user_category_dict[user_id]:
+            product = get_product(text.title())
+
+            image = u.photo_messages(product.image)
+            attachment = f"photo{image[0]['owner_id']}_{image[0]['id']}"
+
+            template_message = f'Название: {product.name}\n' \
+                               f'Описание: {product.description}\n' \
+                               f'Цена: {product.price}'
+
+            v.messages.send(user_id=user_id, message=template_message, attachment=attachment, random_id=0)
+        elif text == 'назад':
+            update_position_user(user_id, 0)
+            send_message(user_id, button_category_menu, 'Наша выпечка', v)
+
+    elif text == 'адреса наших кондитерских':
+        v.messages.send(user_id=user_id, message='г. Москва, ул. Охотничий ряд, д.20, центральный вход', random_id=0)

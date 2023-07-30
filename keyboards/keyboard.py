@@ -1,8 +1,7 @@
 from vk_api.keyboard import VkKeyboard
-
+from database.database_queries import get_list_name_category, get_list_name_products
 
 fake_catalog = ['Хлеб', 'Пирожные', 'Кексы', 'Эклеры', 'Печенье', 'Торты', 'Круассаны', ]
-# fake_catalog = ['Хлеб', 'Пирожные', 'Кексы']
 
 
 def main_menu():
@@ -40,5 +39,8 @@ def creating_a_list_button_menu(list_catalog):
     return keyboards.get_keyboard()
 
 
-button_category_menu = creating_a_list_button_menu(fake_catalog)
+list_categories = get_list_name_category()
+
+button_category_menu = creating_a_list_button_menu(list_categories)
 button_main_menu = main_menu()
+
