@@ -1,4 +1,4 @@
-vk_api
-python-dotenv
-peewee
-requests
+vk_api==11.9.9
+python-dotenv==1.0.0
+peewee==3.16.2
+requests==2.31.0
