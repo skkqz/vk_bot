@@ -2,11 +2,10 @@ from vk_api.keyboard import VkKeyboard
 from database.database_queries import get_list_name_category
 
 
-def main_menu():
-    """Главное меню бота"""
+def create_main_menu():
+    """Создание главного меню бота"""
 
     keyboard = VkKeyboard(one_time=False)
-
     keyboard.add_button('Наша выпечка', color='positive')
     keyboard.add_button('Адреса наших кондитерских', color='positive')
     keyboard.add_line()
@@ -22,23 +21,21 @@ def chunk_list(lst, size=3):
         yield lst[i:i + size]
 
 
-def creating_a_list_button_menu(list_catalog):
-    """Создание списка кнопок из категорий"""
+def create_category_menu(list_catalog):
+    """Создание меню категорий"""
 
-    keyboards = VkKeyboard(one_time=False)
+    keyboard = VkKeyboard(one_time=False)
 
     for item in chunk_list(list_catalog):
         for name in item:
-            keyboards.add_button(name, color='positive')
-        keyboards.add_line()
+            keyboard.add_button(name, color='positive')
+        keyboard.add_line()
 
-    keyboards.add_button('Назад', color='negative')
+    keyboard.add_button('Назад', color='negative')
 
-    return keyboards.get_keyboard()
+    return keyboard.get_keyboard()
 
 
 list_categories = get_list_name_category()
-
-button_category_menu = creating_a_list_button_menu(list_categories)
-button_main_menu = main_menu()
-
+button_main_menu = create_main_menu()
+button_category_menu = create_category_menu(list_categories)

@@ -10,7 +10,7 @@ class User(BaseModel):
     position = IntegerField(default=1, null=True)
 
     class Meta:
-        db_table = 'users'
+        table_name = 'users'
 
 
 class Category(BaseModel):
@@ -19,7 +19,7 @@ class Category(BaseModel):
     name = CharField(max_length=100, null=True)
 
     class Meta:
-        db_table = 'categories'
+        table_name = 'categories'
 
 
 class Product(BaseModel):
@@ -28,11 +28,11 @@ class Product(BaseModel):
     name = CharField(max_length=100, null=True)
     description = CharField(max_length=500)
     price = IntegerField()
-    image = CharField()
+    image = CharField(max_length=1000)
     category = ForeignKeyField(Category, backref='category', null=True)
 
     class Meta:
-        db_table = 'products'
+        table_name = 'products'
 
 
 def create_a_database():

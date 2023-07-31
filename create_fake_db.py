@@ -1,9 +1,9 @@
 import os
 import requests
-from database.models import Category, Product
+from database.models import Category, Product, create_a_database
 
 
-fake_catalog = ['Хлеб', 'Пирожные', 'Кексы', 'Эклеры', 'Печенье', 'Торты', 'Круассаны', ]
+fake_catalog = ['Хлеб', 'Пирожные', 'Кексы', 'Эклеры', 'Печенье', 'Торты', 'Круассаны']
 
 image_product = {
     'Хлеб': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCMVznuubpcJ-_42Uxt9KuNsuHMU6Vj-nv7A&usqp=CAU',
@@ -16,25 +16,36 @@ image_product = {
 }
 
 
+def download_image(url, category, index):
+    """Загрузка изображения и возврат пути до него"""
+
+    path_dir_image = os.path.abspath(os.path.join('image'))
+    os.makedirs(path_dir_image, exist_ok=True)
+
+    r = requests.get(url)
+    path_image = fr'{path_dir_image}\{category}_{index}.jpg'
+
+    with open(path_image, 'wb') as f:
+        f.write(r.content)
+
+    return path_image
+
+
 def create_fake_database():
     """Функция для создания тестовой базы данных"""
 
-    path_dir_image = os.path.abspath(os.path.join('image'))
+    create_a_database()
 
     for num, category in enumerate(fake_catalog):
 
-        Category.create(name=category)
-        category_id = Category.select(Category.id, Category.name).where(Category.name == category).get()
+        category_obj = Category.create(name=category)
 
-        r = requests.get(image_product[category])
-
-        path_image = fr'{path_dir_image}\{category}_{num}.jpg'
-        with open(path_image, 'wb') as f:
-            f.write(r.content)
-
-        for i in range(5):
-            Product.create(name=f'{category} - {i}',
-                           description=f'Тестовое описание {i}', price=100, category_id=category_id, image=path_image)
+        image_url = image_product.get(category)
+        if image_url:
+            image_path = download_image(image_url, category, num)
+            for i in range(5):
+                Product.create(name=f'{category} - {i}',
+                               description=f'Тестовое описание {i}', price=100, category=category_obj, image=image_path)
 
     print('База данных создана')
 
