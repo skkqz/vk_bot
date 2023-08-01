@@ -17,7 +17,7 @@ git clone https://github.com/skkqz/vk_bot/.git
 cd vk_bot
 ~~~
 
-* Убедитесь, что у вас установлен Docker на вашем компьютере. Если его нет, установите Docker с официального сайта: [Docker]https://www.docker.com/get-started.
+* Убедитесь, что у вас установлен Docker на вашем компьютере. Если его нет, установите Docker с официального сайта: [Docker][https://www.docker.com/get-started].
 
 ### Настройка
 * В файле .env Установите свой TOKEN сообщества Вконтакте
